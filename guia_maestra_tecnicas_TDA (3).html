@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Técnicas de Diseño de Algoritmos</title>
+<style>
+:root{
+  --bg:#ececec;
+  --paper:#ffffff;
+  --ink:#1f1f1f;
+  --muted:#666;
+  --line:#d6d6d6;
+  --soft:#f7f7f7;
+  --accent:#24364b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Arial, Helvetica, sans-serif;
+  line-height:1.62;
+}
+.page{
+  max-width:1100px;
+  margin:28px auto;
+  background:var(--paper);
+  border:1px solid #ccc;
+  box-shadow:0 6px 24px rgba(0,0,0,.08);
+}
+.header{
+  padding:38px 48px 30px;
+  border-bottom:2px solid var(--accent);
+}
+.header .faculty{
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--muted);
+  font-weight:700;
+}
+.header h1{
+  margin:10px 0 8px;
+  color:var(--accent);
+  font-size:2.35rem;
+  line-height:1.12;
+}
+.header p{
+  margin:0;
+  max-width:850px;
+  color:#4f4f4f;
+}
+.toc{
+  padding:22px 48px;
+  background:#fafafa;
+  border-bottom:1px solid var(--line);
+}
+.toc strong{
+  display:block;
+  margin-bottom:10px;
+  color:var(--accent);
+}
+.toc-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 28px;
+}
+.toc a{
+  color:#2f4056;
+  text-decoration:none;
+  font-size:.95rem;
+}
+.toc a:hover{text-decoration:underline}
+
+main{padding:10px 48px 50px}
+section{
+  padding:30px 0 34px;
+  border-bottom:1px solid var(--line);
+}
+section:last-child{border-bottom:0}
+h2{
+  color:var(--accent);
+  font-size:1.72rem;
+  margin:0 0 18px;
+  padding-bottom:7px;
+  border-bottom:1px solid #bfc5cc;
+}
+h3{
+  margin:24px 0 9px;
+  font-size:1.18rem;
+  color:#2d3947;
+}
+h4{
+  margin:15px 0 7px;
+  font-size:1rem;
+}
+p{margin:9px 0}
+.lead{font-size:1.04rem;color:#3e3e3e}
+.definition{
+  background:var(--soft);
+  border-left:4px solid var(--accent);
+  padding:13px 16px;
+  margin:16px 0;
+}
+.key{
+  background:#f4f4f4;
+  border:1px solid var(--line);
+  padding:13px 15px;
+  margin:14px 0;
+}
+.key strong{color:var(--accent)}
+.formula{
+  text-align:center;
+  font-family:"Times New Roman", Times, serif;
+  font-size:1.22rem;
+  padding:12px;
+  margin:14px 0;
+  background:#fafafa;
+  border:1px solid var(--line);
+  overflow-x:auto;
+}
+pre{
+  font-family:"Courier New", monospace;
+  font-size:.91rem;
+  line-height:1.5;
+  background:#f7f7f7;
+  border:1px solid var(--line);
+  padding:14px 16px;
+  overflow:auto;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  font-size:.95rem;
+}
+th,td{
+  border:1px solid #cfcfcf;
+  padding:10px 11px;
+  vertical-align:top;
+  text-align:left;
+}
+th{
+  background:#efefef;
+  color:#24364b;
+}
+ul,ol{padding-left:24px}
+li{margin:5px 0}
+.two{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin:15px 0;
+}
+.block{
+  border:1px solid var(--line);
+  padding:15px;
+  background:#fcfcfc;
+}
+.block h4{margin-top:0;color:var(--accent)}
+.summary{
+  margin:20px 0 0;
+  padding:16px 18px;
+  border-top:2px solid var(--accent);
+  border-bottom:2px solid var(--accent);
+  font-weight:700;
+  color:#263547;
+  background:#fafafa;
+}
+.small{font-size:.9rem;color:var(--muted)}
+.footer{
+  padding:24px 48px 30px;
+  background:#fafafa;
+  border-top:1px solid var(--line);
+  color:#666;
+  font-size:.88rem;
+}
+@media(max-width:760px){
+  .page{margin:0;border:0}
+  .header,.toc,main,.footer{padding-left:22px;padding-right:22px}
+  .toc-grid,.two{grid-template-columns:1fr}
+  .header h1{font-size:1.9rem}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="header">
+  <div class="faculty">Teoría de Algoritmos · Guía de estudio</div>
+  <h1>Técnicas de Diseño de Algoritmos</h1>
+  <p>Resumen conceptual de Fuerza Bruta, Greedy, Backtracking, Programación Dinámica y Programación Lineal, con foco en cómo reconocer cada técnica, qué hace, qué complejidad suele tener y qué suele pedirse en ejercicios.</p>
+</header>
+
+<nav class="toc">
+  <strong>Contenido</strong>
+  <div class="toc-grid">
+    <a href="#mapa">1. Mapa general</a>
+    <a href="#fb">2. Fuerza Bruta</a>
+    <a href="#greedy">3. Greedy</a>
+    <a href="#bt">4. Backtracking</a>
+    <a href="#pd">5. Programación Dinámica</a>
+    <a href="#pl">6. Programación Lineal</a>
+    <a href="#complex">7. Complejidades</a>
+    <a href="#compare">8. Comparación final</a>
+    <a href="#whatask">9. Qué suelen pedir</a>
+    <a href="#cheat">10. Resumen rápido</a>
+  </div>
+</nav>
+
+<main>
+
+<section id="mapa">
+<h2>1. Mapa general</h2>
+<p class="lead">La diferencia principal entre estas técnicas está en <strong>cómo recorren, construyen o modelan las soluciones</strong>.</p>
+
+<table>
+<tr>
+<th>Técnica</th>
+<th>Frase para recordarla</th>
+<th>Idea central</th>
+</tr>
+<tr>
+<td><strong>Fuerza Bruta</strong></td>
+<td>Pruebo todo.</td>
+<td>Enumera todas las soluciones candidatas.</td>
+</tr>
+<tr>
+<td><strong>Greedy</strong></td>
+<td>Elijo lo mejor ahora.</td>
+<td>Toma una decisión local y no vuelve atrás.</td>
+</tr>
+<tr>
+<td><strong>Backtracking</strong></td>
+<td>Pruebo y podo.</td>
+<td>Explora un árbol de decisiones y corta ramas que ya no sirven.</td>
+</tr>
+<tr>
+<td><strong>Programación Dinámica</strong></td>
+<td>Comparo y guardo.</td>
+<td>Resuelve subproblemas y reutiliza resultados repetidos.</td>
+</tr>
+<tr>
+<td><strong>Programación Lineal</strong></td>
+<td>Modelo y optimizo.</td>
+<td>Describe el problema mediante variables, objetivo y restricciones.</td>
+</tr>
+</table>
+
+<div class="summary">FB = probar todo · Greedy = elegir ya · BT = probar y podar · PD = comparar y recordar · PL = modelar y optimizar</div>
+</section>
+
+<section id="fb">
+<h2>2. Fuerza Bruta</h2>
+
+<div class="definition">
+<strong>Idea:</strong> generar todas las soluciones posibles, verificar cuáles son válidas y quedarse con la mejor si el problema es de optimización.
+</div>
+
+<h3>Esquema general</h3>
+<pre>mejor = ninguna
+
+para cada solución candidata:
+    si candidata es válida:
+        si candidata mejora a mejor:
+            mejor = candidata
+
+devolver mejor</pre>
+
+<h3>Ejemplo: mochila 0-1</h3>
+<p>Cada objeto puede incluirse o no incluirse. Por lo tanto, con <strong>n</strong> objetos existen:</p>
+<div class="formula">2<sup>n</sup> subconjuntos posibles</div>
+
+<p>La Fuerza Bruta:</p>
+<ol>
+<li>genera todos los subconjuntos,</li>
+<li>descarta los que exceden la capacidad,</li>
+<li>compara los restantes,</li>
+<li>devuelve el de mayor beneficio.</li>
+</ol>
+
+<h3>Qué la caracteriza</h3>
+<ul>
+<li>No poda ramas.</li>
+<li>No reutiliza soluciones de subproblemas.</li>
+<li>Es simple de entender e implementar.</li>
+<li>Puede ser extremadamente costosa.</li>
+</ul>
+
+<div class="key"><strong>Complejidad típica:</strong> O(2<sup>n</sup>) para subconjuntos y O(n!) para permutaciones.</div>
+</section>
+
+<section id="greedy">
+<h2>3. Greedy</h2>
+
+<div class="definition">
+<strong>Idea:</strong> construir la solución paso a paso tomando, en cada momento, la decisión que parece mejor según un criterio local.
+</div>
+
+<h3>Propiedad principal</h3>
+<p>Una decisión greedy normalmente es <strong>irreversible</strong>: se elige y se continúa sin volver atrás.</p>
+
+<h3>Ejemplo: selección de intervalos</h3>
+<p>Para elegir la mayor cantidad posible de charlas que no se superpongan, la regla correcta es:</p>
+<div class="summary">Elegir siempre la charla compatible que termina antes.</div>
+
+<pre>ordenar por horario de finalización
+
+elegir la primera charla
+
+para cada charla siguiente:
+    si es compatible con la última elegida:
+        elegirla</pre>
+
+<h3>Lo importante no es sólo la regla</h3>
+<p>En Greedy hay que demostrar que la regla local conduce a una solución óptima global. Una técnica común es el <strong>argumento de intercambio</strong>.</p>
+
+<div class="key"><strong>Pregunta mental:</strong> ¿puedo demostrar que esta elección local nunca me hace perder una solución mejor?</div>
+
+<div class="key"><strong>Complejidad típica:</strong> O(n log n) cuando primero hay que ordenar y luego recorrer en O(n).</div>
+</section>
+
+<section id="bt">
+<h2>4. Backtracking</h2>
+
+<div class="definition">
+<strong>Idea:</strong> explorar un árbol de decisiones, construyendo soluciones parciales, pero evitando continuar por ramas que ya se sabe que no pueden servir.
+</div>
+
+<h3>Diferencia con Fuerza Bruta</h3>
+<table>
+<tr><th>Fuerza Bruta</th><th>Backtracking</th></tr>
+<tr>
+<td>Genera una solución completa y después la evalúa.</td>
+<td>Evalúa mientras construye y puede cortar antes.</td>
+</tr>
+</table>
+
+<h3>Tipos de poda</h3>
+<table>
+<tr>
+<th>Poda</th>
+<th>Idea</th>
+</tr>
+<tr>
+<td><strong>Por invalidez</strong></td>
+<td>La solución parcial ya viola alguna condición.</td>
+</tr>
+<tr>
+<td><strong>Por cota</strong></td>
+<td>Aunque la rama se completara de la mejor manera posible, no podría superar a la mejor solución conocida.</td>
+</tr>
+</table>
+
+<h3>Ejemplo: N-Reinas</h3>
+<p>Si dos reinas ya se atacan entre sí, agregar más reinas no puede corregir ese conflicto. Esa rama se poda.</p>
+<div class="formula">|fila<sub>1</sub> − fila<sub>2</sub>| = |col<sub>1</sub> − col<sub>2</sub>|</div>
+
+<h3>Esquema general</h3>
+<pre>backtracking(estado):
+
+    si estado es solución:
+        procesarla
+        return
+
+    si estado no puede servir:
+        return
+
+    para cada decisión posible:
+        aplicar decisión
+        backtracking(nuevo estado)
+        deshacer decisión</pre>
+
+<div class="key"><strong>Complejidad:</strong> suele seguir siendo exponencial en el peor caso, aunque las podas reduzcan muchísimo el trabajo real.</div>
+</section>
+
+<section id="pd">
+<h2>5. Programación Dinámica</h2>
+
+<div class="definition">
+<strong>Idea:</strong> resolver subproblemas, guardar sus respuestas y reutilizarlas cuando vuelvan a aparecer.
+</div>
+
+<h3>Dos condiciones importantes</h3>
+<ul>
+<li><strong>Subestructura óptima:</strong> la solución óptima puede construirse a partir de óptimos de subproblemas.</li>
+<li><strong>Subproblemas superpuestos:</strong> los mismos estados aparecen repetidamente.</li>
+</ul>
+
+<h3>Estado</h3>
+<p>Un estado representa toda la información necesaria para describir un subproblema.</p>
+
+<h3>Ejemplo: mochila 0-1</h3>
+<div class="formula">OPT(i, C) = máximo beneficio usando los primeros i objetos con capacidad C</div>
+
+<div class="two">
+<div class="block">
+<h4>No tomar el objeto i</h4>
+<div class="formula">OPT(i − 1, C)</div>
+</div>
+<div class="block">
+<h4>Tomar el objeto i</h4>
+<div class="formula">v<sub>i</sub> + OPT(i − 1, C − w<sub>i</sub>)</div>
+</div>
+</div>
+
+<div class="formula">OPT(i, C) = max { OPT(i − 1, C), v<sub>i</sub> + OPT(i − 1, C − w<sub>i</sub>) }</div>
+
+<h3>Dos formas de implementarla</h3>
+<table>
+<tr><th>Top-down + memoization</th><th>Bottom-up</th></tr>
+<tr>
+<td>Parte del problema grande, usa recursión y almacena estados calculados.</td>
+<td>Parte de los casos base y llena una tabla hasta llegar al problema completo.</td>
+</tr>
+</table>
+
+<div class="key"><strong>Complejidad:</strong> cantidad de estados × trabajo por estado. Para mochila 0-1: O(nC).</div>
+</section>
+
+<section id="pl">
+<h2>6. Programación Lineal</h2>
+
+<div class="definition">
+<strong>Idea:</strong> describir el problema mediante variables de decisión, una función objetivo y restricciones.
+</div>
+
+<h3>Las cuatro preguntas</h3>
+<table>
+<tr>
+<th>Elemento</th>
+<th>Pregunta</th>
+</tr>
+<tr>
+<td>Variables</td>
+<td>¿Qué tengo que decidir?</td>
+</tr>
+<tr>
+<td>Objetivo</td>
+<td>¿Qué quiero maximizar o minimizar?</td>
+</tr>
+<tr>
+<td>Restricciones</td>
+<td>¿Qué me limita?</td>
+</tr>
+<tr>
+<td>Dominio</td>
+<td>¿Las variables son continuas, enteras o binarias?</td>
+</tr>
+</table>
+
+<h3>Ejemplo de producción</h3>
+<p>Sea <strong>x</strong> la cantidad de carteles y <strong>y</strong> la cantidad de banners:</p>
+<div class="formula">max Z = 8x + 10y</div>
+<div class="formula">2x + 2y ≤ 600</div>
+<div class="formula">4y ≤ 600</div>
+<div class="formula">2x + 4y ≤ 800</div>
+<div class="formula">x ≥ 0, y ≥ 0</div>
+
+<h3>Programación Lineal Entera</h3>
+<p>Si las decisiones deben ser enteras o binarias, se agregan restricciones sobre el dominio.</p>
+
+<p>En mochila:</p>
+<div class="formula">I<sub>i</sub> ∈ {0,1}</div>
+<div class="formula">max Σ v<sub>i</sub>I<sub>i</sub></div>
+<div class="formula">Σ w<sub>i</sub>I<sub>i</sub> ≤ C</div>
+
+<h3>Relajación y Branch and Bound</h3>
+<p>Al relajar temporalmente la integralidad, la solución obtenida puede usarse como cota. Branch and Bound utiliza esas cotas para decidir qué ramas vale la pena explorar.</p>
+</section>
+
+<section id="complex">
+<h2>7. Complejidades</h2>
+
+<p class="lead">Conviene relacionar cada complejidad con la estructura que está recorriendo el algoritmo.</p>
+
+<table>
+<tr>
+<th>Técnica</th>
+<th>Complejidad típica</th>
+<th>Cómo pensarla</th>
+</tr>
+<tr>
+<td>Fuerza Bruta</td>
+<td>O(2<sup>n</sup>), O(n!), O(k<sup>n</sup>)</td>
+<td>Contar todas las soluciones candidatas.</td>
+</tr>
+<tr>
+<td>Greedy</td>
+<td>O(n log n) en muchos problemas</td>
+<td>Ordenamiento + recorrido.</td>
+</tr>
+<tr>
+<td>Backtracking</td>
+<td>Exponencial en peor caso</td>
+<td>Tamaño máximo del árbol de decisiones.</td>
+</tr>
+<tr>
+<td>Programación Dinámica</td>
+<td>Estados × trabajo por estado</td>
+<td>Contar estados distintos.</td>
+</tr>
+<tr>
+<td>PL continua</td>
+<td>Polinomial con métodos adecuados</td>
+<td>Importa el modelo y el método de optimización.</td>
+</tr>
+<tr>
+<td>PL entera/binaria</td>
+<td>NP-hard en general</td>
+<td>Aparece búsqueda combinatoria.</td>
+</tr>
+</table>
+
+<h3>Ejemplos concretos</h3>
+<table>
+<tr><th>Problema / técnica</th><th>Complejidad</th></tr>
+<tr><td>Subconjuntos por Fuerza Bruta</td><td>O(2<sup>n</sup>)</td></tr>
+<tr><td>Permutaciones por Fuerza Bruta</td><td>O(n!)</td></tr>
+<tr><td>Greedy con ordenamiento</td><td>O(n log n)</td></tr>
+<tr><td>Backtracking binario</td><td>O(2<sup>n</sup>) en peor caso</td></tr>
+<tr><td>Fibonacci con PD</td><td>O(n)</td></tr>
+<tr><td>Mochila 0-1 con PD</td><td>O(nC)</td></tr>
+</table>
+</section>
+
+<section id="compare">
+<h2>8. Comparación final</h2>
+
+<table>
+<tr>
+<th>Técnica</th>
+<th>Explora alternativas</th>
+<th>Poda</th>
+<th>Guarda subproblemas</th>
+<th>Idea principal</th>
+</tr>
+<tr>
+<td>Fuerza Bruta</td>
+<td>Todas</td>
+<td>No</td>
+<td>No</td>
+<td>Enumerar</td>
+</tr>
+<tr>
+<td>Greedy</td>
+<td>No todas</td>
+<td>No como BT</td>
+<td>No</td>
+<td>Elegir localmente</td>
+</tr>
+<tr>
+<td>Backtracking</td>
+<td>Sí</td>
+<td>Sí</td>
+<td>No necesariamente</td>
+<td>Explorar y cortar</td>
+</tr>
+<tr>
+<td>Programación Dinámica</td>
+<td>Compara las necesarias</td>
+<td>No como idea central</td>
+<td>Sí</td>
+<td>Reutilizar estados</td>
+</tr>
+<tr>
+<td>Programación Lineal</td>
+<td>Depende del método</td>
+<td>Puede aparecer en B&amp;B</td>
+<td>No como PD</td>
+<td>Modelar</td>
+</tr>
+</table>
+
+<h3>Comparaciones clave</h3>
+<div class="two">
+<div class="block">
+<h4>Fuerza Bruta vs Backtracking</h4>
+<p>Fuerza Bruta explora todo. Backtracking intenta detectar temprano qué caminos ya no sirven.</p>
+</div>
+<div class="block">
+<h4>Greedy vs Dinámica</h4>
+<p>Greedy se compromete con una elección local. Dinámica compara alternativas antes de decidir cuál da la mejor solución.</p>
+</div>
+<div class="block">
+<h4>Backtracking vs Dinámica</h4>
+<p>Backtracking piensa en ramas. Dinámica piensa en estados repetidos.</p>
+</div>
+<div class="block">
+<h4>Dinámica vs Lineal</h4>
+<p>En PD diseñás la resolución. En PL diseñás el modelo.</p>
+</div>
+</div>
+</section>
+
+<section id="whatask">
+<h2>9. Qué suelen pedir en ejercicios</h2>
+
+<table>
+<tr>
+<th>Técnica</th>
+<th>Qué deberías poder explicar</th>
+</tr>
+<tr>
+<td><strong>Fuerza Bruta</strong></td>
+<td>Espacio de soluciones, generación, validación y complejidad.</td>
+</tr>
+<tr>
+<td><strong>Greedy</strong></td>
+<td>Regla greedy, justificación de optimalidad y complejidad.</td>
+</tr>
+<tr>
+<td><strong>Backtracking</strong></td>
+<td>Árbol de decisiones, caso base, podas, validez de las podas y peor caso.</td>
+</tr>
+<tr>
+<td><strong>Programación Dinámica</strong></td>
+<td>Estado, casos base, recurrencia, tabla/memoization y complejidad.</td>
+</tr>
+<tr>
+<td><strong>Programación Lineal</strong></td>
+<td>Variables, función objetivo, restricciones, dominio y tipo de modelo.</td>
+</tr>
+</table>
+</section>
+
+<section id="cheat">
+<h2>10. Resumen rápido</h2>
+
+<table>
+<tr>
+<th>Si pienso...</th>
+<th>Probablemente sea...</th>
+</tr>
+<tr>
+<td>“Voy a probar todas las combinaciones.”</td>
+<td>Fuerza Bruta</td>
+</tr>
+<tr>
+<td>“Hay una regla local que puedo demostrar que es segura.”</td>
+<td>Greedy</td>
+</tr>
+<tr>
+<td>“Hay ramas parciales que ya puedo descartar.”</td>
+<td>Backtracking</td>
+</tr>
+<tr>
+<td>“Los mismos subproblemas aparecen una y otra vez.”</td>
+<td>Programación Dinámica</td>
+</tr>
+<tr>
+<td>“Puedo expresar decisiones, objetivo y límites con ecuaciones.”</td>
+<td>Programación Lineal</td>
+</tr>
+</table>
+
+<div class="summary">Fuerza Bruta busca todo. Greedy se compromete. Backtracking descarta. Dinámica recuerda. Lineal modela.</div>
+</section>
+
+</main>
+
+<footer class="footer">
+Guía de estudio basada en los temas vistos hasta ahora en el resumen de Teoría de Algoritmos. Diseño intencionalmente sobrio y académico, pensado para lectura, repaso y eventual impresión.
+</footer>
+
+</div>
+</body>
+</html>
