@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Maestra — Técnicas de Diseño de Algoritmos</title>
+<style>
+:root{
+  --bg:#f4f1ea;
+  --paper:#fffdf9;
+  --paper-2:#f9f5ee;
+  --ink:#262626;
+  --muted:#666155;
+  --line:#ddd4c6;
+  --navy:#22314d;
+  --navy-2:#314669;
+  --blue-soft:#e8effa;
+  --green-soft:#e8f5ed;
+  --violet-soft:#eee8fb;
+  --gold-soft:#fbf2db;
+  --red-soft:#fae8e8;
+  --fb:#7d4f22;
+  --greedy:#356147;
+  --bt:#5c478c;
+  --pd:#27557a;
+  --pl:#8a5d17;
+  --shadow:0 8px 22px rgba(60,52,35,.08);
+  --radius:18px;
+  --radius-sm:12px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height:1.68;
+}
+a{color:var(--navy-2)}
+.wrapper{
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.layout{
+  display:grid;
+  grid-template-columns: 300px minmax(0,1fr);
+  gap:28px;
+}
+.sidebar{
+  position: sticky;
+  top: 18px;
+  align-self:start;
+}
+.sidebox{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.brand{
+  padding:22px 22px 18px;
+  background:linear-gradient(145deg,#24344f,#34496d);
+  color:#fff;
+}
+.brand .mini{
+  font-size:.78rem;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  opacity:.84;
+  font-weight:700;
+}
+.brand h1{
+  margin:10px 0 8px;
+  line-height:1.08;
+  font-size:1.7rem;
+}
+.brand p{
+  margin:0;
+  color:#dfe6f2;
+  font-size:.94rem;
+  line-height:1.5;
+}
+.sidecontent{
+  padding:18px;
+}
+.sidecontent h2{
+  margin:8px 0 10px;
+  font-size:1rem;
+  color:var(--navy);
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.toc a{
+  display:block;
+  text-decoration:none;
+  color:var(--ink);
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  padding:10px 12px;
+  border-radius:12px;
+  font-size:.95rem;
+}
+.toc a:hover{background:#f0ebdf}
+.legend{
+  margin-top:18px;
+  display:grid;
+  gap:8px;
+}
+.legend div{
+  display:flex; align-items:center; gap:10px;
+  font-size:.92rem; color:var(--muted);
+}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.fb{background:var(--fb)}
+.dot.gr{background:var(--greedy)}
+.dot.bt{background:var(--bt)}
+.dot.pd{background:var(--pd)}
+.dot.pl{background:var(--pl)}
+
+main{
+  min-width:0;
+}
+.hero{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:30px 34px;
+  margin-bottom:26px;
+}
+.hero .eyebrow{
+  display:inline-block;
+  font-size:.82rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-weight:800;
+  color:#60708f;
+  margin-bottom:10px;
+}
+.hero h2{
+  margin:0 0 10px;
+  font-size:2.5rem;
+  line-height:1.05;
+  color:var(--navy);
+}
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:1.06rem;
+  max-width:900px;
+}
+.quick-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-top:22px;
+}
+.quick-card{
+  background:#faf7f0;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+}
+.quick-card strong{
+  display:block;
+  margin-bottom:6px;
+  color:var(--navy);
+}
+.section{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:26px 28px;
+  margin-bottom:22px;
+}
+.section h2{
+  font-size:2rem;
+  margin:0 0 16px;
+  color:var(--navy);
+}
+.section h3{
+  margin:22px 0 10px;
+  font-size:1.2rem;
+  color:#2e3952;
+}
+.section h4{
+  margin:18px 0 8px;
+  font-size:1rem;
+  color:#36425e;
+}
+.section p{margin:10px 0; color:#343434}
+.lead{
+  font-size:1.06rem;
+  color:#4f4b42;
+}
+.band{
+  border-radius:18px;
+  padding:18px 20px;
+  margin:16px 0 18px;
+  border:1px solid var(--line);
+}
+.band strong{display:block;margin-bottom:6px}
+.band.fb{background:var(--red-soft); border-left:7px solid var(--fb)}
+.band.greedy{background:var(--green-soft); border-left:7px solid var(--greedy)}
+.band.bt{background:var(--violet-soft); border-left:7px solid var(--bt)}
+.band.pd{background:var(--blue-soft); border-left:7px solid var(--pd)}
+.band.pl{background:var(--gold-soft); border-left:7px solid var(--pl)}
+.tech-grid{
+  display:grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin:16px 0;
+}
+.card{
+  background:#faf7f0;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px 18px;
+}
+.card h4{margin-top:0}
+.card ul{margin:8px 0 0 0}
+.card li{margin:6px 0}
+.card pre{
+  margin:10px 0 0;
+  font-family:var(--mono);
+  font-size:.92rem;
+  background:#f2ede3;
+  border:1px solid #ded2be;
+  border-radius:12px;
+  padding:12px 14px;
+  overflow:auto;
+}
+.note{
+  border-left:5px solid var(--navy-2);
+  background:#f7f4ee;
+  padding:12px 15px;
+  border-radius:10px;
+  margin:14px 0;
+  color:#464137;
+}
+.formula{
+  overflow-x:auto;
+  text-align:center;
+  padding:14px;
+  margin:14px 0;
+  background:#f8f5ef;
+  border:1px solid var(--line);
+  border-radius:14px;
+  font-size:1.25rem;
+  font-family: Cambria, "Times New Roman", serif;
+}
+.two-col{
+  display:grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.three-col{
+  display:grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+.table-wrap{overflow:auto}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fbfaf6;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+th,td{
+  padding:12px 13px;
+  border:1px solid var(--line);
+  text-align:left;
+  vertical-align:top;
+}
+th{
+  background:#efe7d8;
+  color:#2f3a55;
+  font-size:.96rem;
+}
+td{font-size:.95rem}
+ul,ol{padding-left:22px}
+li{margin:6px 0}
+.big-quote{
+  margin:18px 0;
+  padding:18px 20px;
+  text-align:center;
+  font-size:1.24rem;
+  font-weight:800;
+  color:var(--navy);
+  background:linear-gradient(180deg,#f8f4eb,#f1eadc);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+.mini-tag{
+  display:inline-block;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:800;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#ece6d9;
+  color:#675f50;
+  margin-bottom:8px;
+}
+.tech-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.tech-bullet{
+  width:14px;height:14px;border-radius:50%;
+}
+.tech-bullet.fb{background:var(--fb)}
+.tech-bullet.gr{background:var(--greedy)}
+.tech-bullet.bt{background:var(--bt)}
+.tech-bullet.pd{background:var(--pd)}
+.tech-bullet.pl{background:var(--pl)}
+.footer{
+  color:var(--muted);
+  font-size:.92rem;
+  padding-top:6px;
+}
+@media (max-width: 1080px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:relative; top:0}
+}
+@media (max-width: 760px){
+  .hero{padding:24px}
+  .section{padding:22px 18px}
+  .hero h2{font-size:2rem}
+  .section h2{font-size:1.6rem}
+  .tech-grid,.two-col,.three-col{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebox">
+        <div class="brand">
+          <div class="mini">Resumen de estudio</div>
+          <h1>Técnicas de Diseño de Algoritmos</h1>
+          <p>Guía visual y ordenada para distinguir Fuerza Bruta, Greedy, Backtracking, Programación Dinámica y Programación Lineal.</p>
+        </div>
+        <div class="sidecontent">
+          <h2>Índice</h2>
+          <nav class="toc">
+            <a href="#mapa">1. Mapa general</a>
+            <a href="#fb">2. Fuerza Bruta</a>
+            <a href="#greedy">3. Greedy</a>
+            <a href="#bt">4. Backtracking</a>
+            <a href="#pd">5. Programación Dinámica</a>
+            <a href="#pl">6. Programación Lineal</a>
+            <a href="#complex">7. Complejidades</a>
+            <a href="#compare">8. Comparación final</a>
+            <a href="#whatask">9. Qué me piden</a>
+            <a href="#cheat">10. Chuleta rápida</a>
+          </nav>
+
+          <div class="legend">
+            <div><span class="dot fb"></span> Fuerza Bruta</div>
+            <div><span class="dot gr"></span> Greedy</div>
+            <div><span class="dot bt"></span> Backtracking</div>
+            <div><span class="dot pd"></span> Programación Dinámica</div>
+            <div><span class="dot pl"></span> Programación Lineal</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Guía maestra</div>
+        <h2>Una forma clara de distinguir cada técnica</h2>
+        <p>La idea de esta guía es que no sólo memorices definiciones, sino que puedas mirar un ejercicio y detectar <strong>qué técnica te está pidiendo</strong>, <strong>cómo piensa esa técnica</strong> y <strong>qué suele exigirte la cátedra</strong>.</p>
+
+        <div class="quick-grid">
+          <div class="quick-card"><strong>Fuerza Bruta</strong> Pruebo todo.</div>
+          <div class="quick-card"><strong>Greedy</strong> Elijo lo mejor ahora.</div>
+          <div class="quick-card"><strong>Backtracking</strong> Pruebo y podo.</div>
+          <div class="quick-card"><strong>Dinámica</strong> Comparo y guardo.</div>
+          <div class="quick-card"><strong>Lineal</strong> Modelo y optimizo.</div>
+        </div>
+      </section>
+
+      <section class="section" id="mapa">
+        <h2>1. Mapa general</h2>
+        <p class="lead">Todas estas herramientas buscan resolver problemas, pero atacan el problema desde lugares distintos. Si entendés esa diferencia, ya tenés medio tema ganado.</p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Técnica</th>
+              <th>Frase para acordarte</th>
+              <th>Idea central</th>
+            </tr>
+            <tr>
+              <td><strong>Fuerza Bruta</strong></td>
+              <td>“Pruebo todo.”</td>
+              <td>Recorro todo el espacio de soluciones candidatas.</td>
+            </tr>
+            <tr>
+              <td><strong>Greedy</strong></td>
+              <td>“Elijo lo mejor ahora y sigo.”</td>
+              <td>Tomo una decisión local e irreversible que espero que lleve al óptimo global.</td>
+            </tr>
+            <tr>
+              <td><strong>Backtracking</strong></td>
+              <td>“Pruebo, pero corto ramas al pedo.”</td>
+              <td>Exploro un árbol de decisiones y podo ramas imposibles o inútiles.</td>
+            </tr>
+            <tr>
+              <td><strong>Programación Dinámica</strong></td>
+              <td>“No resuelvo dos veces lo mismo.”</td>
+              <td>Descompongo en subproblemas, comparo alternativas y guardo resultados.</td>
+            </tr>
+            <tr>
+              <td><strong>Programación Lineal</strong></td>
+              <td>“Describo matemáticamente qué quiero.”</td>
+              <td>Modelo decisiones, objetivo y restricciones para optimizar.</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="big-quote">FB = probar todo · Greedy = elegir ya · BT = probar y podar · PD = comparar y recordar · PL = modelar y optimizar</div>
+      </section>
+
+      <section class="section" id="fb">
+        <div class="tech-title">
+          <span class="tech-bullet fb"></span>
+          <h2>2. Fuerza Bruta</h2>
+        </div>
+
+        <div class="band fb">
+          <strong>Frase mental</strong>
+          “No sé cuál solución sirve, así que genero todas y después me fijo.”
+        </div>
+
+        <div class="tech-grid">
+          <div class="card">
+            <div class="mini-tag">Qué hace</div>
+            <h4>Generar → validar → comparar</h4>
+            <pre>mejor = ninguna
+
+para cada candidata:
+    si es válida:
+        si mejora a mejor:
+            mejor = candidata
+
+devolver mejor</pre>
+          </div>
+          <div class="card">
+            <div class="mini-tag">Qué pensar</div>
+            <h4>Las preguntas correctas</h4>
+            <ul>
+              <li>¿Cuál es el espacio completo de soluciones?</li>
+              <li>¿Cómo genero cada candidata?</li>
+              <li>¿Cómo verifico si es válida?</li>
+              <li>¿Cómo comparo dos soluciones válidas?</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Ejemplo típico: mochila 0-1</h3>
+        <p>Si cada objeto puede entrar o no entrar, entonces por cada objeto hay dos posibilidades.</p>
+        <div class="formula">Cantidad de subconjuntos = 2<sup>n</sup></div>
+        <p>Fuerza Bruta genera todos los subconjuntos posibles, descarta los que exceden la capacidad y se queda con el de mayor beneficio.</p>
+
+        <h3>Qué la caracteriza</h3>
+        <ul>
+          <li>No intenta ser inteligente durante la búsqueda.</li>
+          <li>No poda.</li>
+          <li>Es simple de plantear, pero suele ser muy costosa.</li>
+        </ul>
+
+        <div class="note"><strong>Complejidad típica:</strong> depende del tamaño del espacio de soluciones. Muy seguido aparece <strong>O(2<sup>n</sup>)</strong> o <strong>O(n!)</strong>.</div>
+      </section>
+
+      <section class="section" id="greedy">
+        <div class="tech-title">
+          <span class="tech-bullet gr"></span>
+          <h2>3. Greedy</h2>
+        </div>
+
+        <div class="band greedy">
+          <strong>Frase mental</strong>
+          “Hago la mejor jugada local y no vuelvo atrás.”
+        </div>
+
+        <div class="tech-grid">
+          <div class="card">
+            <div class="mini-tag">Idea central</div>
+            <h4>Decisión local</h4>
+            <p>En cada paso elegís según una regla. Si la técnica está bien planteada, esa elección local puede integrarse a una solución óptima global.</p>
+          </div>
+          <div class="card">
+            <div class="mini-tag">Lo difícil</div>
+            <h4>Demostrar que funciona</h4>
+            <p>El código suele ser corto. Lo complicado no es implementarlo sino justificar por qué la elección greedy es correcta.</p>
+          </div>
+        </div>
+
+        <h3>Ejemplo clásico: interval scheduling</h3>
+        <p>Queremos elegir la mayor cantidad de charlas no superpuestas. La regla correcta es:</p>
+        <div class="big-quote">Elegir siempre la charla compatible que termina antes.</div>
+        <p>Esa regla deja la mayor cantidad posible de espacio libre para las que vienen después.</p>
+
+        <div class="two-col">
+          <div class="card">
+            <h4>Esquema</h4>
+            <pre>ordenar por hora de fin
+
+elegir la primera charla
+
+para cada charla siguiente:
+    si es compatible con la última elegida:
+        elegirla</pre>
+          </div>
+          <div class="card">
+            <h4>Qué te suelen pedir demostrar</h4>
+            <ul>
+              <li>cuál es la regla greedy,</li>
+              <li>por qué esa regla es segura,</li>
+              <li>por qué una solución óptima puede adaptarse a esa elección.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="note"><strong>Complejidad típica:</strong> muchas veces <strong>O(n log n)</strong> por el ordenamiento, más <strong>O(n)</strong> del recorrido.</div>
+      </section>
+
+      <section class="section" id="bt">
+        <div class="tech-title">
+          <span class="tech-bullet bt"></span>
+          <h2>4. Backtracking</h2>
+        </div>
+
+        <div class="band bt">
+          <strong>Frase mental</strong>
+          “Exploro alternativas, pero si una rama ya no sirve, la corto.”
+        </div>
+
+        <div class="tech-grid">
+          <div class="card">
+            <div class="mini-tag">Cómo piensa</div>
+            <h4>Árbol de decisiones</h4>
+            <p>Cada nivel representa una decisión. Vas construyendo soluciones parciales y viendo si vale la pena seguir.</p>
+          </div>
+          <div class="card">
+            <div class="mini-tag">La palabra clave</div>
+            <h4>Poda</h4>
+            <p>Podar es eliminar una rama completa antes de generar todas sus soluciones descendientes.</p>
+          </div>
+        </div>
+
+        <h3>Dos tipos de poda</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Tipo de poda</th>
+              <th>Significado</th>
+              <th>Frase mental</th>
+            </tr>
+            <tr>
+              <td><strong>Por invalidez</strong></td>
+              <td>La solución parcial ya viola una condición.</td>
+              <td>“Esto ya está mal; seguir no lo arregla.”</td>
+            </tr>
+            <tr>
+              <td><strong>Por cota</strong></td>
+              <td>Aunque todo lo que queda saliera perfecto, no superaría a la mejor solución actual.</td>
+              <td>“Ni en el mejor caso me alcanza.”</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>Ejemplo: N-Reinas</h3>
+        <p>Se coloca una reina por fila. Si una nueva reina entra en conflicto con una anterior, esa rama se descarta de inmediato.</p>
+        <div class="formula">Conflicto diagonal si |fila<sub>1</sub> − fila<sub>2</sub>| = |col<sub>1</sub> − col<sub>2</sub>|</div>
+
+        <div class="two-col">
+          <div class="card">
+            <h4>Esquema general</h4>
+            <pre>backtracking(estado):
+
+    si estado es solución:
+        procesarla
+        return
+
+    si estado no puede servir:
+        return    // poda
+
+    para cada decisión posible:
+        hacer
+        backtracking(nuevo estado)
+        deshacer</pre>
+          </div>
+          <div class="card">
+            <h4>Idea importante</h4>
+            <p>El “deshacer” es fundamental: probás una opción, explorás todo lo que produce y volvés atrás para probar otra.</p>
+          </div>
+        </div>
+
+        <div class="note"><strong>Complejidad típica:</strong> sigue siendo exponencial en el peor caso. La poda ayuda muchísimo en la práctica, pero no garantiza un peor caso chico.</div>
+      </section>
+
+      <section class="section" id="pd">
+        <div class="tech-title">
+          <span class="tech-bullet pd"></span>
+          <h2>5. Programación Dinámica</h2>
+        </div>
+
+        <div class="band pd">
+          <strong>Frase mental</strong>
+          “Si ya resolví este subproblema, no lo resuelvo otra vez.”
+        </div>
+
+        <div class="tech-grid">
+          <div class="card">
+            <div class="mini-tag">Requisitos</div>
+            <h4>Cuándo sirve</h4>
+            <ul>
+              <li><strong>Subestructura óptima:</strong> la solución óptima se arma con soluciones óptimas de problemas más chicos.</li>
+              <li><strong>Subproblemas superpuestos:</strong> los mismos estados aparecen varias veces.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="mini-tag">Palabra clave</div>
+            <h4>Estado</h4>
+            <p>El estado es la información mínima necesaria para describir un subproblema.</p>
+          </div>
+        </div>
+
+        <h3>Ejemplo mínimo: Fibonacci</h3>
+        <div class="formula">F(n) = F(n − 1) + F(n − 2)</div>
+        <p>La versión recursiva ingenua recalcula muchas veces los mismos valores; dinámica guarda esos resultados y evita repetir trabajo.</p>
+
+        <h3>Ejemplo fuerte: mochila 0-1</h3>
+        <p>Definimos el estado:</p>
+        <div class="formula">OPT(i, C) = máximo beneficio usando los primeros i objetos con capacidad C</div>
+
+        <div class="two-col">
+          <div class="card">
+            <h4>No tomar el objeto i</h4>
+            <div class="formula">OPT(i − 1, C)</div>
+          </div>
+          <div class="card">
+            <h4>Tomar el objeto i</h4>
+            <div class="formula">v<sub>i</sub> + OPT(i − 1, C − w<sub>i</sub>)</div>
+          </div>
+        </div>
+
+        <p>Entonces la recurrencia es:</p>
+        <div class="formula">OPT(i, C) = max { OPT(i − 1, C), v<sub>i</sub> + OPT(i − 1, C − w<sub>i</sub>) }</div>
+
+        <h3>Dos formas de implementarla</h3>
+        <div class="tech-grid">
+          <div class="card">
+            <h4>Top-down + memoization</h4>
+            <p>Arrancás por el problema grande y bajás recursivamente. Cada estado que aparece se guarda.</p>
+          </div>
+          <div class="card">
+            <h4>Bottom-up</h4>
+            <p>Arrancás por los casos base y llenás una tabla hasta llegar a la respuesta final.</p>
+          </div>
+        </div>
+
+        <div class="note"><strong>Complejidad típica:</strong> <strong>cantidad de estados × trabajo por estado</strong>. En mochila clásica: <strong>O(nC)</strong>.</div>
+      </section>
+
+      <section class="section" id="pl">
+        <div class="tech-title">
+          <span class="tech-bullet pl"></span>
+          <h2>6. Programación Lineal</h2>
+        </div>
+
+        <div class="band pl">
+          <strong>Frase mental</strong>
+          “No diseño una recurrencia: describo matemáticamente qué quiero optimizar.”
+        </div>
+
+        <div class="three-col">
+          <div class="card">
+            <div class="mini-tag">1</div>
+            <h4>Variables</h4>
+            <p>¿Qué estoy decidiendo?</p>
+          </div>
+          <div class="card">
+            <div class="mini-tag">2</div>
+            <h4>Función objetivo</h4>
+            <p>¿Qué quiero maximizar o minimizar?</p>
+          </div>
+          <div class="card">
+            <div class="mini-tag">3</div>
+            <h4>Restricciones</h4>
+            <p>¿Qué límites tiene el problema?</p>
+          </div>
+        </div>
+
+        <h3>Ejemplo de producción</h3>
+        <p>Si una gráfica produce carteles y banners, podríamos definir:</p>
+        <ul>
+          <li><strong>x</strong> = cantidad de carteles</li>
+          <li><strong>y</strong> = cantidad de banners</li>
+        </ul>
+
+        <div class="formula">max Z = 8x + 10y</div>
+        <div class="formula">2x + 2y ≤ 600</div>
+        <div class="formula">4y ≤ 600</div>
+        <div class="formula">2x + 4y ≤ 800</div>
+        <div class="formula">x ≥ 0, y ≥ 0</div>
+
+        <h3>Qué tenés que reconocer</h3>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Parte del modelo</th>
+              <th>Pregunta mental</th>
+            </tr>
+            <tr>
+              <td>Variables de decisión</td>
+              <td>¿Qué cosas puede elegir el modelo?</td>
+            </tr>
+            <tr>
+              <td>Objetivo</td>
+              <td>¿Qué quiero optimizar?</td>
+            </tr>
+            <tr>
+              <td>Restricciones</td>
+              <td>¿Qué limita a las decisiones?</td>
+            </tr>
+            <tr>
+              <td>Dominio</td>
+              <td>¿Las variables son continuas, enteras o binarias?</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>Mochila como programación lineal entera</h3>
+        <p>Si <strong>I<sub>i</sub> = 1</strong> cuando el objeto i entra y <strong>0</strong> si no entra:</p>
+        <div class="formula">max Σ v<sub>i</sub>I<sub>i</sub></div>
+        <div class="formula">Σ w<sub>i</sub>I<sub>i</sub> ≤ C</div>
+        <div class="formula">I<sub>i</sub> ∈ {0,1}</div>
+
+        <div class="note"><strong>Complejidad conceptual:</strong> la PL continua es mucho más tratable; la PL entera/binaria mete dificultad combinatoria y suele resolverse con técnicas como Branch and Bound.</div>
+      </section>
+
+      <section class="section" id="complex">
+        <h2>7. Complejidades</h2>
+        <p class="lead">La forma más sana de pensar complejidades en estos temas es esta: no memorizar sueltas, sino preguntarte <strong>qué está recorriendo el algoritmo</strong>.</p>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Técnica</th>
+              <th>Complejidad típica</th>
+              <th>Cómo pensarla</th>
+            </tr>
+            <tr>
+              <td>Fuerza Bruta</td>
+              <td>Exponencial o factorial</td>
+              <td>Contar cuántas soluciones completas se generan.</td>
+            </tr>
+            <tr>
+              <td>Greedy</td>
+              <td>O(n log n) muchas veces</td>
+              <td>Ordenamiento + recorrido lineal.</td>
+            </tr>
+            <tr>
+              <td>Backtracking</td>
+              <td>Exponencial en peor caso</td>
+              <td>Tamaño máximo del árbol de decisión.</td>
+            </tr>
+            <tr>
+              <td>Dinámica</td>
+              <td>Estados × trabajo por estado</td>
+              <td>Cuántos estados distintos existen y cuánto cuesta cada uno.</td>
+            </tr>
+            <tr>
+              <td>PL continua</td>
+              <td>Polinomial con métodos adecuados</td>
+              <td>Importa el modelo más que una recurrencia.</td>
+            </tr>
+            <tr>
+              <td>PL entera</td>
+              <td>Combinatoria / NP-hard en general</td>
+              <td>La integralidad vuelve difícil la búsqueda.</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="tech-grid">
+          <div class="card">
+            <h4>Fuerza Bruta</h4>
+            <ul>
+              <li>subconjuntos: <strong>O(2<sup>n</sup>)</strong></li>
+              <li>permutaciones: <strong>O(n!)</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Greedy</h4>
+            <ul>
+              <li>ordenar: <strong>O(n log n)</strong></li>
+              <li>recorrer: <strong>O(n)</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Backtracking</h4>
+            <ul>
+              <li>árbol binario: <strong>O(2<sup>n</sup>)</strong></li>
+              <li>permutaciones: <strong>O(n!)</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Dinámica</h4>
+            <ul>
+              <li>Fibonacci: <strong>O(n)</strong></li>
+              <li>Mochila 0-1: <strong>O(nC)</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="compare">
+        <h2>8. Comparación final</h2>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Técnica</th>
+              <th>¿Explora alternativas?</th>
+              <th>¿Poda?</th>
+              <th>¿Guarda resultados?</th>
+              <th>Idea fuerte</th>
+            </tr>
+            <tr>
+              <td>Fuerza Bruta</td>
+              <td>Sí, todas</td>
+              <td>No</td>
+              <td>No</td>
+              <td>Enumerar todo</td>
+            </tr>
+            <tr>
+              <td>Greedy</td>
+              <td>No todas</td>
+              <td>No en el sentido de BT</td>
+              <td>No</td>
+              <td>Decisión local</td>
+            </tr>
+            <tr>
+              <td>Backtracking</td>
+              <td>Sí</td>
+              <td>Sí</td>
+              <td>No necesariamente</td>
+              <td>Explorar y cortar</td>
+            </tr>
+            <tr>
+              <td>Dinámica</td>
+              <td>Compara las necesarias</td>
+              <td>No como idea central</td>
+              <td>Sí</td>
+              <td>Reutilizar subproblemas</td>
+            </tr>
+            <tr>
+              <td>Lineal</td>
+              <td>Depende del método</td>
+              <td>Puede haber en B&amp;B</td>
+              <td>No como PD</td>
+              <td>Modelar restricciones</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <h4>Fuerza Bruta vs Backtracking</h4>
+            <p><strong>FB:</strong> genera soluciones completas y recién después valida.</p>
+            <p><strong>BT:</strong> valida mientras construye y corta temprano.</p>
+          </div>
+          <div class="card">
+            <h4>Greedy vs Dinámica</h4>
+            <p><strong>Greedy:</strong> se compromete con una alternativa local.</p>
+            <p><strong>PD:</strong> compara alternativas y guarda respuestas para no recalcular.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="whatask">
+        <h2>9. ¿Qué me suelen pedir con cada una?</h2>
+
+        <div class="tech-grid">
+          <div class="card">
+            <h4>Fuerza Bruta</h4>
+            <ol>
+              <li>Definir el espacio de soluciones.</li>
+              <li>Explicar cómo se generan.</li>
+              <li>Decir cómo se validan.</li>
+              <li>Analizar complejidad.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h4>Greedy</h4>
+            <ol>
+              <li>Definir la regla local.</li>
+              <li>Explicar el algoritmo.</li>
+              <li>Demostrar correctitud.</li>
+              <li>Analizar complejidad.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h4>Backtracking</h4>
+            <ol>
+              <li>Definir el árbol de decisión.</li>
+              <li>Dar casos base.</li>
+              <li>Mostrar las podas.</li>
+              <li>Justificar que las podas son válidas.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h4>Programación Dinámica</h4>
+            <ol>
+              <li>Definir el estado.</li>
+              <li>Dar casos base.</li>
+              <li>Escribir la recurrencia.</li>
+              <li>Explicar tabla o memoization.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h4>Programación Lineal</h4>
+            <ol>
+              <li>Definir variables.</li>
+              <li>Escribir objetivo.</li>
+              <li>Traducir restricciones.</li>
+              <li>Definir dominio.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cheat">
+        <h2>10. Chuleta rápida</h2>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Si el ejercicio te hace pensar...</th>
+              <th>Probablemente sea...</th>
+            </tr>
+            <tr>
+              <td>“Tengo que probar todas las combinaciones.”</td>
+              <td><strong>Fuerza Bruta</strong></td>
+            </tr>
+            <tr>
+              <td>“Hay una regla local que parece segura y puedo demostrarla.”</td>
+              <td><strong>Greedy</strong></td>
+            </tr>
+            <tr>
+              <td>“Estoy construyendo una solución parcial y algunas ramas ya se pueden descartar.”</td>
+              <td><strong>Backtracking</strong></td>
+            </tr>
+            <tr>
+              <td>“Se repiten una y otra vez los mismos subproblemas.”</td>
+              <td><strong>Programación Dinámica</strong></td>
+            </tr>
+            <tr>
+              <td>“Puedo expresar decisiones, objetivo y límites con ecuaciones/inecuaciones.”</td>
+              <td><strong>Programación Lineal</strong></td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="big-quote">Si querés: después te hago una segunda versión todavía más “apunte de facultad”, más sobria y compacta, o una versión “bonita para estudiar” con colores más suaves y menos texto por bloque.</div>
+      </section>
+
+      <div class="footer">
+        Guía basada en los temas vistos hasta ahora en tu sitio de resumen TDA. El diseño fue reordenado para que se sienta más como una guía de estudio hecha por una persona: navegación lateral, bloques consistentes, menos amontonamiento y jerarquía visual más clara.
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>
